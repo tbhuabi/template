@@ -163,7 +163,7 @@ Template.prototype = {
             }
         }
         init(newArr);
-        var result = this._computed(newArr, this.data)
+        var result = this._computed(newArr, this.data);
         if (this.callback) {
             this.callback(result);
         }
