@@ -92,11 +92,18 @@
  *		data: 当前作用域中对数据对象
  *
  *
+ *this._sort(ruleTree, data) 方法用于给数组或字符串排序
+ *      ruleTree: 判断规则树
+ *		data: 当前作用域中对数据对象
+ *
+ *
+ *
  ****************/
 
 function Template(obj) {
-    this.data = obj.data;
-    this.template = obj.template;
+    obj=obj||{};
+    this.data = obj.data||{};
+    this.template = obj.template||'';
     this.callback = obj.callback;
     this.dataEmptyHandler = false || obj.dataEmptyHandler;
     if (obj.handlers) {
@@ -185,6 +192,8 @@ Template.prototype = {
                         result += _this._if(arr, data);
                     } else if (/^<@log/.test(firstChild)) {
                         result += _this._log(arr, data);
+                    } else if (/^<@sort/.test(firstChild)) {
+                        result += _this._sort(arr, data);
                     } else {
                         for (var i = 0; i < arr.length; i++) {
                             if (Template.isType.isArray(arr[i])) {
@@ -444,57 +453,68 @@ Template.prototype = {
             return this._getValue(arg, data);
         }
     },
+    _copy: function(obj) {
+        function copy(obj) {
+            var newObj;
+            if (Template.isType.isArray(obj)) {
+                newObj = [];
+                for (var i = 0; i < obj.length; i++) {
+                    if (Template.isType.isArray(obj[i]) || Template.isType.isObject(obj[i])) {
+                        newObj.push(copy(obj[i]))
+                    } else {
+                        newObj.push(obj[i]);
+                    }
+                }
+            } else if (Template.isType.isObject(obj)) {
+                newObj = {};
+                for (var i in obj) {
+                    if (Template.isType.isArray(obj[i]) || Template.isType.isObject(obj[i])) {
+                        newObj[i] = copy(obj[i]);
+                    } else {
+                        newObj[i] = obj[i];
+                    }
+                }
+            }
+            return newObj;
+        }
+        return copy(obj);
+    },
+    _recordScope: function(data, obj, valueKey, i) {
+        var currentObj = {
+            _parentObject: data
+        };
+        switch (valueKey.length) {
+            case 2:
+                currentObj[valueKey[0]] = {};
+                currentObj[valueKey[0]][valueKey[1]] = obj;
+                break;
+            case 3:
+                currentObj[valueKey[0]] = {};
+                currentObj[valueKey[0]][valueKey[1]] = obj;
+                currentObj[valueKey[0]][valueKey[2]] = i;
+        }
+        return currentObj;
+    },
     _for: function(ruleTree, data) {
         ruleTree.pop();
         var expression = ruleTree.shift().replace(/^<@for\s+|>$/g, '').split(/\s+/);
-
         var obj = this._getValue(expression[2], data);
         var result = '';
-
         var valueKey = expression[0].match(/[^\[\],]+/g);
-
-        function createObject(obj, i) {
-            var currentObj = {
-                _parentObject: data
-            };
-            switch (valueKey.length) {
-                case 2:
-                    currentObj[valueKey[0]] = {};
-                    currentObj[valueKey[0]][valueKey[1]] = obj;
-                    break;
-                case 3:
-                    currentObj[valueKey[0]] = {};
-                    currentObj[valueKey[0]][valueKey[1]] = obj;
-                    currentObj[valueKey[0]][valueKey[2]] = i;
-            }
-            return currentObj;
-        }
-
-        function copy(arr) {
-            var newArr = [];
-            for (var i = 0; i < arr.length; i++) {
-                if (Template.isType.isArray(arr[i])) {
-                    newArr.push(copy(arr[i]))
-                } else {
-                    newArr.push(arr[i]);
-                }
-            }
-            return newArr;
-        }
 
         if (Template.isType.isArray(obj)) {
             for (var i = 0; i < obj.length; i++) {
-                result += this._computed(copy(ruleTree), createObject(obj[i], i));
+                result += this._computed(this._copy(ruleTree), this._recordScope(data, obj[i], valueKey, i));
             }
             return result;
         } else if (Template.isType.isString(obj)) {
             for (var i = 0; i < obj.length; i++) {
-                result += this._computed(copy(ruleTree), createObject(obj.charAt(i), i));
+                result += this._computed(this._copy(ruleTree), this._recordScope(data, obj.charAt(i), valueKey, i));
             }
             return result;
         } else if (Template.isType.isObject(obj)) {
             for (var i in obj) {
-                result += this._computed(copy(ruleTree), createObject(obj[i], i));
+                result += this._computed(this._copy(ruleTree), this._recordScope(data, obj[i], valueKey, i));
             }
             return result;
         }
@@ -508,11 +528,49 @@ Template.prototype = {
         }
         return '';
     },
+    _sort: function(ruleTree, data) {
+        ruleTree.pop();
+        var expression = ruleTree.shift().replace(/^<@sort\s+|>$/g, '').split(/\s+/);
+        var newData = this._copy(data);
+        var value = this._getValue(expression.pop(), newData);
+        var valueKey = expression[0].match(/[^\[\],]+/g);
+        if (Template.isType.isArray(value)) {
+            value.sort(function(n, m) {
+                if (expression.length === 3) {
+                    switch (expression[1]) {
+                        case '<':
+                            return n[expression[2]] > m[expression[2]];
+                        case '>':
+                            return n[expression[2]] < m[expression[2]];
+                    }
+                } else {
+                    switch (expression[1]) {
+                        case '<':
+                            return n > m;
+                        case '>':
+                            return n < m;
+                    }
+                }
+            });
+        } else if (Template.isType.isString(value)) {
+            value = value.split('');
+            value.sort(function(n, m) {
+                switch (expression[1]) {
+                    case '<':
+                        return n > m;
+                    case '>':
+                        return n < m;
+                }
+            }).join('');
+        }
+        return this._computed(ruleTree, this._recordScope(data, value, valueKey));
+    },
     _log: function(ruleTree, data) {
+        var oldRuleTree = this._copy(ruleTree);
         ruleTree.pop();
         var expressionTree = this._createExpressionTree(ruleTree.shift().replace(/^<@log\s+|>$/g, ''));
         var logData = {
-            ruleTree: ruleTree,
+            ruleTree: oldRuleTree,
             data: {}
         };
         logData.data[expressionTree[0].substring(1)] = this._calculator(expressionTree, data);

@@ -45,7 +45,7 @@
 				//表达式中依赖方法的集合，也可在调用init前调用addHandlersMethod方法来
 				//		增加方法，也可直接在new之前调用Template的静态方法addHandlersMethod函数
 				//		来增加方法，所有方法默认第一个参数都为表达式的value值，支持链式调用如：
-				//		@data.name->dataFormat:[yyyy-MM-dd]->wrap:[<i>@content</>]
+				//		@data.name->dataFormat:[yyyy-MM-dd,@data.age]->wrap:[<i>@content</>]
 				//
 				//支持的表达式示例：
 				//@data
@@ -67,7 +67,6 @@
 				//
 				//总结如下：
 				//	运算符用空格隔开，支持四则运算，取模，和逻辑运算
-				//	每个运算单元都可用@取当前作用域json对象的值
 				//	函数参数也可用@取值，但不支持运算，参数之间用逗号隔开
 				//	鉴于昨天晚上我上传上来，兄弟们要求提供源码，所以这次提供的为未压缩版本
 				//	如还有不明白的地方，可联系QQ：464328895 畫筆
@@ -75,7 +74,7 @@
 				//
                 dataEmptyHandler: false,//是否把undefined, null 处理为空字符串
                 callback: function(result) {
-                    console.log(result);
+                    //console.log(result);
 					//这里也会把结果输出出来
                 }
             });
@@ -125,6 +124,31 @@
 				</@if>
 			</@for>
     	</table>
+    	<p>让我们根据用户的年龄属性排个序吧</p>
+    	<table>
+			<tr>
+				<td>姓名</td>
+				<td>年龄</td>
+				<td>性别</td>
+				<td>工作</td>
+			</tr>
+			<@sort variable[valuekey] < age @listGroup.userList>
+                <@for child[value] in @variable.valuekey>
+                    <tr>
+                        <td><span>{{@child.value.name}}</span></td>
+                        <td><span>{{@child.value.age}}</span></td>
+                        <td><span>{{@child.value.sex}}</span></td>
+                        <td><span>{{@child.value.job}}</span></td>
+                    </tr>
+                </@for>
+			</@sort>
+    	</table>
+        <p>当然也可以对数据进行排序</p>
+        <@sort newArray[array] > @listGroup.arr>
+            <@for newArr[value,index] in @newArray.array>
+                <div>序号：<span>{{@newArr.index}}</span>值：<span>{{@newArr.value}}</span></div>
+            </@for>
+        </@sort>
     	<p>当然，还可以给表格加上序号</p>
 		<table>
 			<tr>
@@ -167,7 +191,6 @@
 				<td>工作</td>
 			</tr>
 			<@for variable[value] in @listGroup.userList>
-				<@log @variable></@log>
 				<@if !@variable.value.sex>
 					<tr>
 						<td><span>{{@variable.value.name}}</span></td>
@@ -240,8 +263,8 @@
 					</tr>
 				</@if>
 			</@for>
-    	</table>
     </script>
+    	</table>
     <div class="wrap">
         <div id="box">
         </div>
