@@ -245,19 +245,16 @@ Template.prototype = {
                                     return _this.dataEmptyHandler ? '' : data;
                             }
                             if (aKey.length) {
-                                var key = aKey.shift();
-                                if (data[key] === undefined) {
-                                    if (data._parentObject === undefined) {
-                                        if (aKey.length) {
-                                            throw new Error('表达式：' + $0 + '中，' + key + '未定义');
-                                        } else {
-                                            return callee(undefined);
-                                        }
-                                    } else {
-                                        return callee(data._parentObject[key]);
-                                    }
+                                if (data[aKey[0]] === undefined) {
+									if(data._parentObject===undefined){
+										if(aKey.length===1){
+											return callee(undefined);
+										}
+										throw new Error('表达式：' + $0 + '中，' + aKey[0] + '未定义');
+									}
+									return callee(data._parentObject);
                                 }
-                                return callee(data[key]);
+                                return callee(data[aKey.shift()]);
                             }
                             return data;
                         })(data);
