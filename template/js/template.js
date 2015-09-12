@@ -246,13 +246,13 @@ Template.prototype = {
                             }
                             if (aKey.length) {
                                 if (data[aKey[0]] === undefined) {
-									if(data._parentObject===undefined){
-										if(aKey.length===1){
-											return callee(undefined);
-										}
-										throw new Error('表达式：' + $0 + '中，' + aKey[0] + '未定义');
-									}
-									return callee(data._parentObject);
+                                    if (data._parentObject === undefined) {
+                                        if (aKey.length === 1) {
+                                            return callee(undefined);
+                                        }
+                                        throw new Error('表达式：' + $0 + '中，' + aKey[0] + '未定义');
+                                    }
+                                    return callee(data._parentObject);
                                 }
                                 return callee(data[aKey.shift()]);
                             }
