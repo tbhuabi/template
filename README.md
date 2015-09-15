@@ -117,12 +117,13 @@ var computedText = newTemplte.init(template);
     
 ####标签语法：
 #####if
-*  ```html
+*  
+```html
     <@if @true>
         这里是判断为真输出的内容
     </@if>
 ```
-    判断语句 
+判断语句 
     
 *  ```html
     <@if @true && @data.size >= 5>
