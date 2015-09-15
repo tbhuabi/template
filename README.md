@@ -58,43 +58,43 @@ var computedText = newTemplte.init(template);
 -------------------
 ####表达式语法
 *  `{{@data}}`  
-    取当前命名空间为data的值  
+    取当前命名空间为data的值    
 *  `{{@data.list.0}}`  
-    取当前命名空间为data的list属性的第0个  
+    取当前命名空间为data的list属性的第0个      
 *  `{{@data.timeNumber->dateFormat}}`  
-    取当前命名空间为data的timeNumber属性，并调用dateFormat方法返回处理结果  
+    取当前命名空间为data的timeNumber属性，并调用dateFormat方法返回处理结果   
 *  `{{@data.timeNumber->dateFormat:[yyyy-MM-dd]}}`  
-    取当前命名空间为data的timeNumber并调用dateFormat方法按yyyy-MM-dd格式返回处理结果，当前传入的参数始终从方法的第二个参数开始，第一个参数永远都为当前表达式的value  
+    取当前命名空间为data的timeNumber并调用dateFormat方法按yyyy-MM-dd格式返回处理结果，当前传入的参数始终从方法的第二个参数开始，第一个参数永远都为当前表达式的value   
 *  `{{@data.timeNumber->你自定义的方法:[@data.age]}}`  
-    取当前命名空间为data的timeNumber，并调用你自定义的方法，且传入data.age的值  
+    取当前命名空间为data的timeNumber，并调用你自定义的方法，且传入data.age的值     
 *  `{{@data.timeNumber->你自定义的方法:[@data.age,@data.size]}}`  
-    取当前命名空间为data的timeNumber，并调用你自定义的方法，且传入多个值  
+    取当前命名空间为data的timeNumber，并调用你自定义的方法，且传入多个值    
 *  `{{@data.timeNumber->dateFormat:[yyyy-MM-dd]->wrap:[<div>@content</div>]}}`   
-    取当前命名空间的data属性的timeNumber并调用dateFormat方法按yyyy-MM-dd格式返回处理结果，再把处理结果放在一对div标签中  
+    取当前命名空间的data属性的timeNumber并调用dateFormat方法按yyyy-MM-dd格式返回处理结果，再把处理结果放在一对div标签中    
 *  `{{1 + 2}}`  
-    四则运算  
+    四则运算     
 *  `{{@data.number + 3}}`  
-    包含表达式的四则运算  
+    包含表达式的四则运算   
 *  `{{(@data.number + 3) * 5 + @data.size % (2 - 6)}}`  
-    更复杂的四则运算  
+    更复杂的四则运算     
 *  `{{(@data.number && @data.size}}`  
-    逻辑运算，逻辑运算只输出true/false，一般用在if语句中  
+    逻辑运算，逻辑运算只输出true/false，一般用在if语句中     
 *  `{{@true}}`  
-    取真  
+    取真      
 *  `{{@false}}`  
-    取假  
+    取假   
 *  `{{@undefined}}`  
     取undefined  
 *  `{{!@undefined}}`  
-    取反   
+    取反      
 *  `{{(@data.number && @data.list->getLength || 1 > @data.age || @false}}`  
-    更复杂的逻辑运算    
+    更复杂的逻辑运算        
 *  `{{(@data.number + 3 >= 5 * (@data.size + 3)}}`  
-    更复杂的逻辑运算     
+    更复杂的逻辑运算         
 *  `{{(@data.number + 3 >= 5 * (@data.size + 3)}}`  
-    更复杂的逻辑运算   
+    更复杂的逻辑运算       
     
 ####标签语法：
-*  `<@if @true>这里是判断为真输出的内容</@if>` 判断语句  
+*  `<@if @true>这里是判断为真输出的内容</@if>` 判断语句   
 
 
