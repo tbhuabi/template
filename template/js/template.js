@@ -539,16 +539,16 @@ Template.prototype = {
                 if (expression.length === 3) {
                     switch (expression[1]) {
                         case '<':
-                            return n[expression[2]] > m[expression[2]];
+                            return n[expression[2]] - m[expression[2]];
                         case '>':
-                            return n[expression[2]] < m[expression[2]];
+                            return m[expression[2]] - n[expression[2]];
                     }
                 } else {
                     switch (expression[1]) {
                         case '<':
-                            return n > m;
+                            return n - m;
                         case '>':
-                            return n < m;
+                            return m - n;
                     }
                 }
             });
@@ -557,9 +557,9 @@ Template.prototype = {
             value.sort(function(n, m) {
                 switch (expression[1]) {
                     case '<':
-                        return n > m;
+                        return n - m;
                     case '>':
-                        return n < m;
+                        return m - n;
                 }
             }).join('');
         }
