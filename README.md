@@ -117,76 +117,76 @@ var computedText = newTemplte.init(template);
     
 ####标签语法：
 #####if
+判断语句 
 ```html
 <@if @true>
     这里是判断为真输出的内容
 </@if>
 ```
-判断语句 
 
+更复杂的判断语句
 ```html
 <@if @true && @data.size >= 5>
     这里是判断为真输出的内容
 </@if>
 ```  
-更复杂的判断语句
     
+更复杂的判断语句
 ```html
 <@if @true && @data.size >= 5 || @data.name === 张三 && (1 + 3) % @data.size == 0>
     这里是判断为真输出的内容
 </@if>
 ```  
-更复杂的判断语句
     
 #####for
+ for循环语句的中文示例
 ```html
 <@for 命名空间[每一项的值,当前循环的索引] in @data.list>
     这里是循环输出的内容,序号：{{命名空间.当前循环的索引}}，对应的值：{{命名空间.每一项的值}}
 </@for>
 ```
- for循环语句的中文示例
     
+for循环语句
 ```html
 <@for variable[valueName,valueIndex] in @data.list>
     这里是循环输出的内容，序号：{{varible.valueIndex}}，对应值：{{variable.valueName}}
 </@for>
 ```
-for循环语句
    
+如果不需要索引还可以这么写
 ```html
 <@for variable[valueName] in @data.list>
     这里是循环输出的内容
 </@for>
 ```
-如果不需要索引还可以这么写
     
 #####sort
+sort排序的中文示例
 ```html
 <@sort 命名空间[排序后的值] 排序方法 是否根据某个值进行排序 @data.list>
     这里不会输出内容，可以在这里嵌套语句或字符串来输出内容，就像我一样
 </@for>
 ```
-sort排序的中文示例
     
+根据data.list的size的值从大到小排序，并储存在varibel的newData属性中
 ```html
 <@sort variable[newData] > size @data.list>
     这里不会输出内容，可以在这里嵌套语句或字符串来输出内容，就像我一样
 </@sort>
 ```
-根据data.list的size的值从大到小排序，并储存在varibel的newData属性中
     
+直接从小到大排序data.list，并储存在varible的newData属性中
 ```html
 <@sort variable[newData] < @data.list>
     这里不会输出内容，可以在这里嵌套语句或字符串来输出内容，就像我一样
 </@sort>
 ```
-直接从小到大排序data.list，并储存在varible的newData属性中
     
 #####log
+把data.list的值打印在控制台中，要注意的是：真正的值是放在打印出来的对象的data属性下面
 ```html
 <@log @data.list>这里永远不会输出内容</@log>
 ```
-把data.list的值打印在控制台中，要注意的是：真正的值是放在打印出来的对象的data属性下面
     
     
 ####总结如下：
@@ -195,7 +195,7 @@ sort排序的中文示例
 3.  for和sort有命名空间语法，需注意书写
 
 ####常见bug：
-1.  如果你把模板放在放在某个html元素中，并取这个元素的innerHTML属性，并传入Template引擎，会导致引擎报错，因为浏览器在解析html时，不能识别如：`<@for></@for>`、`<@log></@log>`等等模板语法，那么浏览器会自动尝试转义，最终你取出来的html字符串，不能通过Template引擎正则的匹配  
+*  如果你把模板放在放在某个html元素中，并取这个元素的innerHTML属性，并传入Template引擎，会导致引擎报错，因为浏览器在解析html时，不能识别如：`<@for></@for>`、`<@log></@log>`等等模板语法，那么浏览器会自动尝试转义，最终你取出来的html字符串，不能通过Template引擎正则的匹配  
     建议这样写：
 ```html
 <script type="text/template" id="template">
@@ -213,5 +213,5 @@ sort排序的中文示例
     });
 </script>
 ```
-2.  你也可以在模板中嵌入`<@log @data.list></@log>`来在控制台打印出当前的数据内容，并查找错误。
+*  你也可以在模板中嵌入`<@log @data.list></@log>`来在控制台打印出当前的数据内容，并查找错误。
 
