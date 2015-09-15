@@ -3,7 +3,7 @@ template 模板引擎文档
 参数说明：
 -------------------------
 在new Template时，需传入一个参数，参数为json对象   
-如在阅读文档时有任何疑问，可参考[dome.html](template/dome.html)，或真接与我联系：  
+如在阅读文档时有任何疑问，可参考[dome.html](https://github.com/18616392776/template/blob/master/template/demo.html)，或真接与我联系：  
 QQ: 464328895  
 
 
@@ -155,4 +155,25 @@ var computedText = newTemplte.init(template);
 1.  运算符用空格隔开，支持四则运算，取模，和逻辑运算
 2.  函数参数也可用@取值，但不支持运算，参数之间用逗号隔开
 3.  for和sort有命名空间语法，需注意书写
+
+####常见bug：
+1.  如果你把模板放在放在某个html元素中，并取这个元素的innerHTML属性，并传入Template引擎，会导致引擎报错，因为浏览器在解析html时，不能识别如：`<@for></@for>`、`<@log></@log>`等等模板语法，那么浏览器会自动尝试转义，最终你取出来的html字符串，不能通过Template引擎正则的匹配  
+    建议这样写：
+```html
+<script type="text/template" id="template">
+    <div>
+        {{@data.type}}
+        <@for variable[valueKey,indexKey] in @data.list>
+            这是是循环输出的内容
+        </@for>
+    </div>
+</script>
+<script>
+    var template = document.getElementById('template').innerHTML;
+    var newTemplate = new Template({
+        template: template
+    });
+</script>
+```
+2.  你也可以在模板中嵌入`<@log @data.list></@log>`来在控制台打印出当前的数据内容，并查找错误。
 
