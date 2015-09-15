@@ -90,7 +90,7 @@ var computedText = newTemplte.init(template);
 *  `{{(@data.number + 3) * 5 + @data.size % (2 - 6)}}`  
     更复杂的四则运算
         
-*  `{{(@data.number && @data.size}}`  
+*  `{{@data.number && @data.size}}`  
     逻辑运算，逻辑运算只输出true/false，一般用在if语句中 
         
 *  `{{@true}}`  
@@ -117,13 +117,25 @@ var computedText = newTemplte.init(template);
     
 ####标签语法：
 #####if
-*  `<@if @true>这里是判断为真输出的内容</@if>`  
+*  ```html
+    <@if @true>
+        这里是判断为真输出的内容
+    </@if>
+```
     判断语句 
     
-*  `<@if @true && @data.size >= 5>这里是判断为真输出的内容</@if>`  
+*  ```html
+    <@if @true && @data.size >= 5>
+        这里是判断为真输出的内容
+    </@if>
+```  
     更复杂的判断语句
     
-*  `<@if @true && @data.size >= 5 || @data.name === 张三 && (1 + 3) % @data.size == 0>这里是判断为真输出的内容</@if>`  
+*  ```html
+    <@if @true && @data.size >= 5 || @data.name === 张三 && (1 + 3) % @data.size == 0>
+        这里是判断为真输出的内容
+    </@if>
+```  
     更复杂的判断语句
     
 #####for
