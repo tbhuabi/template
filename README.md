@@ -4,7 +4,7 @@ template 模板引擎文档
 -------------------------
 1.在new Template时，需传入一个参数，参数为json对象  
 
-``` 
+```javascript 
     var newTemplate = new Template({  
       template: '一段模板字符串',  
         data: {  
