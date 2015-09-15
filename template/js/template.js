@@ -553,15 +553,13 @@ Template.prototype = {
                 }
             });
         } else if (Template.isType.isString(value)) {
-            value = value.split('');
-            value.sort(function(n, m) {
-                switch (expression[1]) {
-                    case '<':
-                        return n - m;
-                    case '>':
-                        return m - n;
-                }
-            }).join('');
+            value = value.split('').sort();
+			switch (expression[1]) {
+				case '<':
+					return value.join('');
+				case '>':
+					return value.reverse().join('');
+			}
         }
         return this._computed(ruleTree, this._recordScope(data, value, valueKey));
     },
