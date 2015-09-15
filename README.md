@@ -3,7 +3,7 @@ template 模板引擎文档
 参数说明：
 -------------------------
 在new Template时，需传入一个参数，参数为json对象   
-如在阅读文档时有任何疑问，可参考[dome.html]:(template/dome.html)，或真接与我联系：  
+如在阅读文档时有任何疑问，可参考[dome.html](template/dome.html)，或真接与我联系：  
 QQ: 464328895  
 
 
