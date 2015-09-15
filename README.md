@@ -50,6 +50,7 @@ newTemplate.addHandlersMethod({
 });
 var computedText = newTemplte.init(template);
 //computedText为模板计算后的字符串，调用init会启动模板引擎开始计算，并返回计算后的值
+//如果在实例化时有传入callback，也会调用callback，并把计算后的结果传给callback的第一个参数
 //template参数为一个模板字符串，如果不传，则调用Template引擎实例化时传入的template
 //也就是说，可以根据同一个json数据对象，传入不同的模板，解析出不同的结果，这在做表格排序等后台管理平台是非常有用的
 ```
@@ -59,11 +60,11 @@ var computedText = newTemplte.init(template);
 ```html
 {{@data}}
 ```
-取当前命名空间为data的值
+*取当前命名空间为data的值
 ```html
 {{@data.list.0}}
 ```
-取当前命名空间为data的list属性的第0个
+*取当前命名空间为data的list属性的第0个
 ```html
 {{@data.timeNumber->dateFormat}}
 ```
