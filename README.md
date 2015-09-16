@@ -3,7 +3,7 @@ template 模板引擎文档
 参数说明：
 -------------------------
 在new Template时，需传入一个参数，参数为json对象   
-如在阅读文档时有任何疑问，可参考[dome.html](https://github.com/18616392776/template/blob/master/template/demo.html)，或真接与我联系：  
+如在阅读文档时有任何疑问，可参考[demo.html](https://github.com/18616392776/template/blob/master/template/demo.html)，或真接与我联系：  
 QQ: 464328895  
 
 
@@ -44,7 +44,7 @@ Template.addHandlersMethod({
 ####原型方法：
 
 ```javascript
-var newTemplate = new Template('这里需要传入参数，dome不在重复写');
+var newTemplate = new Template('这里需要传入参数，demo不在重复写');
 newTemplate.addHandlersMethod({
     '你的方法名': function(value){
         //这个和上面的静态方法功能是一样的
