@@ -1,5 +1,7 @@
 template 模板引擎文档
 =========================
+template.js遵循amd和cmd规范，如果你的项目中有使用requirejs或seajs，可在页面中直接引用  
+
 参数说明：
 -------------------------
 在new Template时，需传入一个参数，参数为json对象   
