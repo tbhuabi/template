@@ -104,7 +104,7 @@
     //此处是做一些兼容处理
     if (typeof define === 'function') {
         if (define.amd) {
-            define('three', [], function() {
+            define('Template', [], function() {
                 return factory(global);
             })
         } else if (define.cmd) {
