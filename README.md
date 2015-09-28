@@ -2,10 +2,11 @@ template2.0 模板引擎文档
 =========================
 template.js遵循amd和cmd规范，如果你的项目中有使用requirejs或seajs，可在页面中直接引用  
 
-更新说明：
+2.0更新说明：
 -------------------------
 由于在实际使用中，发现如：`<@for></@for>`这样的语法，不支持html压缩，且IDE格式化代码时会错乱，故更改模板语法如下：  
-所有1.0版本中用到`<@XXX></@XXX>`类似的标签，全部更改为`<exp XX="表达式"></exp>`这种形式，其它在1.0版本中用到的语法，还是照旧
+所有1.0版本中用到`<@XXX></@XXX>`类似的标签，全部更改为`<exp XX="表达式"></exp>`这种形式，其它在1.0版本中用到的语法，还是照旧，如你在使用1.0版本，语法可参考[demo_old.html](https://github.com/18616392776/template/blob/master/template/demo_old.html)，或直接与我联系。  
+附上1.0js文件地址：[template_old.js](https://github.com/18616392776/template/blob/master/template/js/template_old.js)。
 
 
 参数说明：
@@ -127,73 +128,73 @@ var computedText = newTemplte.init(template);
 #####if
 判断语句 
 ```html
-<@if @true>
+<exp if="@true">
     这里是判断为真输出的内容
-</@if>
+</exp>
 ```
 
 更复杂的判断语句
 ```html
-<@if @true && @data.size >= 5>
+<exp if="@true && @data.size >= 5">
     这里是判断为真输出的内容
-</@if>
+</exp>
 ```  
     
 更复杂的判断语句
 ```html
-<@if @true && @data.size >= 5 || @data.name === 张三 && (1 + 3) % @data.size == 0>
+<exp if="@true && @data.size >= 5 || @data.name === 张三 && (1 + 3) % @data.size == 0">
     这里是判断为真输出的内容
-</@if>
+</exp>
 ```  
     
 #####for
  for循环语句的中文示例
 ```html
-<@for 命名空间[每一项的值,当前循环的索引] in @data.list>
+<exp for="命名空间[每一项的值,当前循环的索引] in @data.list">
     这里是循环输出的内容,序号：{{命名空间.当前循环的索引}}，对应的值：{{命名空间.每一项的值}}
-</@for>
+</exp>
 ```
     
 for循环语句
 ```html
-<@for variable[valueName,valueIndex] in @data.list>
+<exp for="variable[valueName,valueIndex] in @data.list">
     这里是循环输出的内容，序号：{{varible.valueIndex}}，对应值：{{variable.valueName}}
-</@for>
+</exp>
 ```
    
 如果不需要索引还可以这么写
 ```html
-<@for variable[valueName] in @data.list>
+<exp for="variable[valueName] in @data.list">
     这里是循环输出的内容
-</@for>
+</exp>
 ```
     
 #####sort
 sort排序的中文示例
 ```html
-<@sort 命名空间[排序后的值] 排序方法 是否根据某个值进行排序 @data.list>
+<exp sort="命名空间[排序后的值] 排序方法 是否根据某个值进行排序 @data.list">
     这里不会输出内容，可以在这里嵌套语句或字符串来输出内容，就像我一样
-</@for>
+</exp>
 ```
     
 根据data.list的size的值从大到小排序，并储存在varibel的newData属性中
 ```html
-<@sort variable[newData] > size @data.list>
+<exp sort="variable[newData] > size @data.list">
     这里不会输出内容，可以在这里嵌套语句或字符串来输出内容，就像我一样
-</@sort>
+</exp>
 ```
     
 直接从小到大排序data.list，并储存在varible的newData属性中
 ```html
-<@sort variable[newData] < @data.list>
+<exp sort="variable[newData] < @data.list">
     这里不会输出内容，可以在这里嵌套语句或字符串来输出内容，就像我一样
-</@sort>
+</exp>
 ```
     
 #####log
 把data.list的值打印在控制台中，要注意的是：真正的值是放在打印出来的对象的data属性下面
 ```html
-<@log @data.list>这里永远不会输出内容</@log>
+<exp log="@data.list">这里永远不会输出内容</exp>
 ```
     
     
@@ -209,9 +210,9 @@ sort排序的中文示例
 <script type="text/template" id="template">
     <div>
         {{@data.type}}
-        <@for variable[valueKey,indexKey] in @data.list>
+        <exp for="variable[valueKey,indexKey] in @data.list">
             这是是循环输出的内容
-        </@for>
+        </exp>
     </div>
 </script>
 <script>
@@ -221,5 +222,5 @@ sort排序的中文示例
     });
 </script>
 ```
-*  你也可以在模板中嵌入`<@log @data.list></@log>`来在控制台打印出当前的数据内容，并查找错误。
+*  你也可以在模板中嵌入`<exp log="@data.list"></exp>`来在控制台打印出当前的数据内容，并查找错误。
 
