@@ -135,14 +135,14 @@ var computedText = newTemplte.init(template);
 
 更复杂的判断语句
 ```html
-<exp if="@true &amp;&amp; @data.size >= 5">
+<exp if="@true &#38;&#38; @data.size >= 5">
     这里是判断为真输出的内容
 </exp>
 ```  
     
 更复杂的判断语句
 ```html
-<exp if="@true &amp;&amp; @data.size >= 5 || @data.name === 张三 &amp;&amp; (1 + 3) % @data.size == 0">
+<exp if="@true &#38;&#38; @data.size >= 5 || @data.name === 张三 &#38;&#38; (1 + 3) % @data.size == 0">
     这里是判断为真输出的内容
 </exp>
 ```  
