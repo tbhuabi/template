@@ -86,7 +86,7 @@
  *
  *this._log(ruleTree, data)		方法用于在控制台打印当前作用域中的数据对象，打印内容为：
  								ruleTree： 当前运算规则树
-								data：	当前打印内容的命名空间，方法会取表达式<exp log="@variable"></exp>中，
+								data：	当前打印内容的命名空间，方法会取表达式<@log @variable></@log>中，
 										 @variable表达式计算后的值，并包含在data对象内，即：data.variable
  *		ruleTree: 判断规则树
  *		data: 当前作用域中对数据对象
@@ -153,24 +153,22 @@
         constructor: Template,
         init: function(template) {
             template = template || this.template;
-            var reg = /(?!^)(?=<\/?exp)/g;
+            var reg = /(?!^)(?=<\/?@\w+)/g;
             //去除换行符，并切割语法标签前的内容
             var tempArr = template.replace(/\s*\n\s*/g, '').split(reg);
             var newArr = [];
-            var reg2 = /^(<\/?exp(?:\s+\w+\s*=\s*(?:(?:[^>](?!\s))+|['"][^'"]+['"]))?>)(.*)$/;
+            var reg2 = /^(<\/?@(?:.(?!(?:\w|[\u4E00-\u9FA5])>))+.(?:\w|[\u4E00-\u9FA5])>)(.*)$/;
             //切割语法标签后的内容
             //抽取模板业务逻辑
             for (var i = 0; i < tempArr.length; i++) {
                 var current = tempArr[i];
-                if (reg2.test(current)) {
-                    current.replace(reg2, function($0, $1, $2) {
-                        var a = arguments;
-
+                if (reg2.test(tempArr[i])) {
+                    tempArr[i].replace(reg2, function($0, $1, $2) {
                         newArr.push($1);
                         $2 && newArr.push($2);
                     })
                 } else {
-                    newArr.push(current);
+                    newArr.push(tempArr[i]);
                 }
             }
 
@@ -179,9 +177,9 @@
                 var stratIndex;
                 for (var i = 0; i < arr.length; i++) {
                     if (Template.isType.isArray(arr[i])) continue;
-                    if (/^<exp/.test(arr[i])) {
+                    if (/^<@/.test(arr[i])) {
                         stratIndex = i;
-                    } else if (/^<\/exp/.test(arr[i])) {
+                    } else if (/^<\/@/.test(arr[i])) {
                         arr.splice(stratIndex, 0, arr.splice(stratIndex, i - stratIndex + 1));
                         init(arr);
                         break;
@@ -204,28 +202,24 @@
                 if (Template.isType.isArray(arr)) {
                     var firstChild = arr[0];
 
-                    if (Template.isType.isString(firstChild) && /^<exp/.test(firstChild)) {
-                        firstChild.replace(/^<exp\s+|>$|['"]/g, '').replace(/^(\w+)\s*=\s*(.+)$/, function($0, $1, $2) {
-                            arr.pop();
-                            arr.shift();
-                            var reg = /^\s+|\s+$/g;
-                            $1 = $1.replace(reg, '');
-                            $2 = $2.replace(reg, '');
-                            switch ($1) {
-                                case 'for':
-                                    result += _this._for(arr, data, $2);
-                                    break;
-                                case 'if':
-                                    result += _this._if(arr, data, $2);
-                                    break;
-                                case 'log':
-                                    result += _this._log(arr, data, $2);
-                                    break;
-                                case 'sort':
-                                    result += _this._sort(arr, data, $2);
-                                    break;
+                    if (Template.isType.isString(firstChild)) {
+                        if (/^<@for/.test(firstChild)) {
+                            result += _this._for(arr, data);
+                        } else if (/^<@if/.test(firstChild)) {
+                            result += _this._if(arr, data);
+                        } else if (/^<@log/.test(firstChild)) {
+                            result += _this._log(arr, data);
+                        } else if (/^<@sort/.test(firstChild)) {
+                            result += _this._sort(arr, data);
+                        } else {
+                            for (var i = 0; i < arr.length; i++) {
+                                if (Template.isType.isArray(arr[i])) {
+                                    result += concat(arr[i]);
+                                } else {
+                                    result += _this._replace(arr[i], data)
+                                }
                             }
-                        });
+                        }
                     } else {
                         for (var i = 0; i < arr.length; i++) {
                             if (Template.isType.isArray(arr[i])) {
@@ -317,7 +311,7 @@
             //		方法也可不传参数，如：dataFormat->wrap
             //		参数也可写入取值表达式，但取值表达式不支持传参，如：dataFormat:[@data.user.age]->wrap:[<i>@content</>]
             if (!expression) return value;
-            var arr = expression.split(/-(>|gt;)/);
+            var arr = expression.split(/->/);
             var _this = this;
             return (function(value) {
                 if (!arr.length) return value;
@@ -352,7 +346,7 @@
                             child.shift();
                             var endItem = child.pop();
                             if (endItem !== ')') {
-                                child.push(endItem.replace(/^\)-(>|gt;)/, ''));
+                                child.push(endItem.replace(/^\)->/, ''));
                             }
                         }
                         arr.splice(stratIndex, 0, child);
@@ -518,8 +512,9 @@
             }
             return currentObj;
         },
-        _for: function(ruleTree, data, expression) {
-            expression = expression.split(/\s+/);
+        _for: function(ruleTree, data) {
+            ruleTree.pop();
+            var expression = ruleTree.shift().replace(/^<@for\s+|>$/g, '').split(/\s+/);
             var obj = this._getValue(expression[2], data);
             var result = '';
             var valueKey = expression[0].match(/[^\[\],]+/g);
@@ -542,15 +537,17 @@
             }
             throw new Error(expression[2] + ' 不支持循环操作');
         },
-        _if: function(ruleTree, data, expression) {
-            var expressionTree = this._createExpressionTree(expression);
+        _if: function(ruleTree, data) {
+            ruleTree.pop();
+            var expressionTree = this._createExpressionTree(ruleTree.shift().replace(/^<@if\s+|>$/g, ''));
             if (this._calculator(expressionTree, data)) {
                 return this._computed(ruleTree, data);
             }
             return '';
         },
-        _sort: function(ruleTree, data, expression) {
-            expression = expression.split(/\s+/);
+        _sort: function(ruleTree, data) {
+            ruleTree.pop();
+            var expression = ruleTree.shift().replace(/^<@sort\s+|>$/g, '').split(/\s+/);
             var newData = this._copy(data);
             var value = this._getValue(expression.pop(), newData);
             var valueKey = expression[0].match(/[^\[\],]+/g);
@@ -583,10 +580,10 @@
             }
             return this._computed(ruleTree, this._recordScope(data, value, valueKey));
         },
-        _log: function(ruleTree, data, expression) {
+        _log: function(ruleTree, data) {
             var oldRuleTree = this._copy(ruleTree);
             ruleTree.pop();
-            var expressionTree = this._createExpressionTree(expression);
+            var expressionTree = this._createExpressionTree(ruleTree.shift().replace(/^<@log\s+|>$/g, ''));
             var logData = {
                 ruleTree: oldRuleTree,
                 data: {}

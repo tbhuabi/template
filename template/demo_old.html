@@ -59,11 +59,11 @@
 				//1 + (@data.number + 5)->format * @data.number
 				//
 				//支持for循环
-				//		<exp for="表达式"></exp>
+				//		<@for 表达式></@for>
 				//支持if判断
-				//		<exp if="表达式"></exp>
+				//		<@if 表达式></@if>
 				//支持log，方便调试
-				//		<exp log="表达式"></exp>
+				//		<@log 表达式></@log>
 				//
 				//总结如下：
 				//	运算符用空格隔开，支持四则运算，取模，和逻辑运算
@@ -84,7 +84,7 @@
 </head>
 
 <body>
-    <script id="template" type="text/template">
+    <script type="text/template" id="template">
 		<h1>template dome</h1>
 		<h2 style="color: red;">具体模板语法，请参照以下内容</h2>
 		<h2 style="color: #c78d0a;">这个颜色的东东是运算后的结果</h2>
@@ -98,14 +98,14 @@
 				<td>工作</td>
 				<td>type</td>
 			</tr>
-			<exp for='variable[value] in @listGroup.userList'>
+			<@for variable[value] in @listGroup.userList>
 				<tr>
 					<td><span>{{@variable.value.name}}</span></td>
 					<td><span>{{@variable.value.age}}</span></td>
 					<td><span>{{@variable.value.job}}</span></td>
 					<td><span>{{@listGroup.type}}</span></td>
 				</tr>
-			</exp>
+			</@for>
     	</table>
     	<p>其中年龄大于30岁的有</p>
     	<table>
@@ -114,15 +114,15 @@
 				<td>年龄</td>
 				<td>工作</td>
 			</tr>
-			<exp for='obj[person] in @listGroup.userList'>
-				<exp if='@obj.person.age > 30'>
+			<@for obj[person] in @listGroup.userList>
+				<@if @obj.person.age > 30>
 					<tr>
 						<td><span>{{@obj.person.name}}</span></td>
 						<td><span>{{@obj.person.age}}</span></td>
 						<td><span>{{@obj.person.job}}</span></td>
 					</tr>
-				</exp>
-			</exp>
+				</@if>
+			</@for>
     	</table>
     	<p>让我们根据用户的年龄属性排个序吧</p>
     	<table>
@@ -132,23 +132,23 @@
 				<td>性别</td>
 				<td>工作</td>
 			</tr>
-			<exp sort='variable[valuekey] < age @listGroup.userList'>
-                <exp for='child[value] in @variable.valuekey'>
+			<@sort variable[valuekey] < age @listGroup.userList>
+                <@for child[value] in @variable.valuekey>
                     <tr>
                         <td><span>{{@child.value.name}}</span></td>
                         <td><span>{{@child.value.age}}</span></td>
                         <td><span>{{@child.value.sex}}</span></td>
                         <td><span>{{@child.value.job}}</span></td>
                     </tr>
-                </exp>
-			</exp>
+                </@for>
+			</@sort>
     	</table>
         <p>当然也可以对数据进行排序</p>
-        <exp sort='newArray[array] > @listGroup.arr'>
-            <exp for='newArr[value,index] in @newArray.array'>
+        <@sort newArray[array] > @listGroup.arr>
+            <@for newArr[value,index] in @newArray.array>
                 <div>序号：<span>{{@newArr.index}}</span>值：<span>{{@newArr.value}}</span></div>
-            </exp>
-        </exp>
+            </@for>
+        </@sort>
     	<p>当然，还可以给表格加上序号</p>
 		<table>
 			<tr>
@@ -157,14 +157,14 @@
 				<td>年龄</td>
 				<td>工作</td>
 			</tr>
-			<exp for='variable[value,index] in @listGroup.userList'>
+			<@for variable[value,index] in @listGroup.userList>
 				<tr>
 					<td><span>{{@variable.index}}</span></td>
 					<td><span>{{@variable.value.name}}</span></td>
 					<td><span>{{@variable.value.age}}</span></td>
 					<td><span>{{@variable.value.job}}</span></td>
 				</tr>
-			</exp>
+			</@for>
     	</table>
     	<p>什么？序号不能从0开始，好吧，难不倒我</p>
 		<table>
@@ -174,14 +174,14 @@
 				<td>年龄</td>
 				<td>工作</td>
 			</tr>
-			<exp for="variable[value,index] in @listGroup.userList">
+			<@for variable[value,index] in @listGroup.userList>
 				<tr>
 					<td><span>{{@variable.index + 1}}</span></td>
 					<td><span>{{@variable.value.name}}</span></td>
 					<td><span>{{@variable.value.age}}</span></td>
 					<td><span>{{@variable.value.job}}</span></td>
 				</tr>
-			</exp>
+			</@for>
     	</table>
     	<p>想看看这里面有没有不男不女的人</p>
 		<table>
@@ -190,15 +190,15 @@
 				<td>年龄</td>
 				<td>工作</td>
 			</tr>
-			<exp for="variable[value] in @listGroup.userList">
-				<exp if="!@variable.value.sex">
+			<@for variable[value] in @listGroup.userList>
+				<@if !@variable.value.sex>
 					<tr>
 						<td><span>{{@variable.value.name}}</span></td>
 						<td><span>{{@variable.value.age}}</span></td>
 						<td><span>{{@variable.value.job}}</span></td>
 					</tr>
-				</exp>
-			</exp>
+				</@if>
+			</@for>
     	</table>
     	<p>我还想看看这些人家的亲戚</p>
 		<table>
@@ -209,18 +209,18 @@
 				<td>亲戚</td>
 				<td>注册时间</td>
 			</tr>
-			<exp for="variable[value] in @listGroup.userList">
+			<@for variable[value] in @listGroup.userList>
 				<tr>
 					<td><span>{{@variable.value.name}}</span></td>
 					<td><span>{{@variable.value.age}}</span></td>
 					<td><span>{{@variable.value.job}}</span></td>
 					<td>
-						<exp for="child[value,index] in @variable.value.relatives">
+						<@for child[value,index] in @variable.value.relatives>
 							<div>关系：<span>{{@child.index}}</span>名字是什么呢：<span>{{@child.value}}</span></div>
-						</exp>
+						</@for>
 					</td>
 				</tr>
-			</exp>
+			</@for>
     	</table>
     	<p>我比较喜欢妹子，想看看她们的注册时间，当然，我只会给你提供一个时间戳，你要给我格式化好</p>
 		<table>
@@ -231,8 +231,8 @@
 				<td>工作</td>
 				<td>亲戚</td>
 			</tr>
-			<exp for="variable[value] in @listGroup.userList">
-				<exp if="@variable.value.sex === 女">
+			<@for variable[value] in @listGroup.userList>
+				<@if @variable.value.sex === 女>
 					<tr>
 						<td><span>{{@variable.value.name}}</span></td>
 						<td><span>{{@variable.value.age}}</span></td>
@@ -240,8 +240,8 @@
 						<td><span>{{@variable.value.job}}</span></td>
 						<td><span>{{@variable.value.registerTime->dateFormat}}</span></td>
 					</tr>
-				</exp>
-			</exp>
+				</@if>
+			</@for>
     	</table>
     	<p>注册时间能不能只要年月，不要日？</p>
 		<table>
@@ -252,8 +252,8 @@
 				<td>工作</td>
 				<td>亲戚</td>
 			</tr>
-			<exp for="variable[value] in @listGroup.userList">
-				<exp if="@variable.value.sex === 女">
+			<@for variable[value] in @listGroup.userList>
+				<@if @variable.value.sex === 女>
 					<tr>
 						<td><span>{{@variable.value.name}}</span></td>
 						<td><span>{{@variable.value.age}}</span></td>
@@ -261,8 +261,8 @@
 						<td><span>{{@variable.value.job}}</span></td>
 						<td><span>{{@variable.value.registerTime->dateFormat:[yyyy-MM]}}</span></td>
 					</tr>
-				</exp>
-			</exp>
+				</@if>
+			</@for>
     	</table>
     </script>
     <div class="wrap">
