@@ -302,7 +302,7 @@
                         value = isToBoolen[0].length === 1 ? !value : !! value;
                     }
                     if ($2) {
-                        value = _this._valueHandler(value, $2.substring(2), _this.handler);
+                        value = _this._valueHandler(value, $2.substring(2), data);
                     }
                 })
                 return value;
