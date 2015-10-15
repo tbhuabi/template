@@ -268,6 +268,9 @@
                         case 'undefined':
                             value = undefined;
                             break;
+                        case 'null':
+                            value = null;
+                            break;
                         default:
                             value = (function(data) {
                                 var callee = arguments.callee;
