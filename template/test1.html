@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="js/template.js"></script>
+    <script>
+        window.onload=function(){
+            var tpl=document.getElementById('temp').innerHTML;
+            var box=document.getElementById('box');
+            var tp=new Template({
+                template: tpl
+            });
+            box.innerHTML=tp.init();
+        }
+    </script>
+</head>
+<body>
+  <div>
+      最终结果：
+   <div id="box"></div>
+  </div>
+
+
+
+    <script id="temp" type="text/html">
+        <div>{{(3 + 2) * 5 - 2}}</div>
+    </script>
+</body>
+</html>
