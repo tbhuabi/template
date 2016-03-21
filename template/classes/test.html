@@ -12,14 +12,18 @@
         console.log(div);
         window.onload = function() {
             XMLTreeBuilder(document.getElementById('text').innerHTML);
+//			var a=document.getElementById('box');
+//			console.dir(a);
+//			console.log(console)
         }
     </script>
 </head>
 
 <body>
-   <script id="text" type="text/html">
-
-    <exp if="a<b" fdsaa='5>8'>  a<b</exp>
+  <div id="box" a="b" class="boxes"></div>
+   <script id="text" type="text/template">
+   	<e_xp-a></e_xp-a>
+    <exp fdsaa='5>8' if="a<b+'a'" >""  a<b</exp>
     <exp if="a>b"></exp>
     <h1>template dome</h1>
     <h2 style="color: red;">具体模板语法，请参照以下内容</h2>

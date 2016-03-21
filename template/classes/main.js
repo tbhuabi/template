@@ -1,6 +1,6 @@
 function isType(type) {
     return function(obj) {
-        return {}.toString.call(obj) == '[object ' + type + ']'
+        return {}.toString.call(obj) == '[object ' + type + ']';
     }
 }
 var toolKit = {
@@ -44,14 +44,39 @@ var toolKit = {
 
 //基于字符串生成类DOM树状Array
 function XMLTreeBuilder(text) {
-    var arr = text.split(/(?!^)(?=<\/?[\w\-]+(?:>|(?:\s+[\w\-]+=('|")[^\1]+\1)*\s*>))/);
-	var newArr=[];
+    var oddTagList = ['a', 'img', 'input', 'br', 'hr', 'param', 'meta', 'link'];
+    text = text.replace(/\s*[\n\t\r]+\s*/g, '');
+    var arr = [];
+    text.split(/(?!^)(?=<\/?[\w\-]+(?:\s+[\w\-]+(?:=""|="[^"]*"|=''|='[^"]*'|[^\s]+)*)*\s*>)/).filter(function(item) {
+        arr.push(item);
+    });
+    var newArr = [];
     arr.filter(function(item) {
-        if(item && item != "'" && item != '"'){
-			newArr.push(item);
-		};
+        var oldLength = newArr.length;
+        item.replace(/(<\/?[\w\-]+(?:\s+[\w\-]+(?:=""|="[^"]*"|=''|='[^']*'|[^\s]+)*)*\s*>)(.*)/, function(str, $1, $2) {
+            newArr.push($1);
+            $2 && newArr.push($2);
+        });
+        if (oldLength == newArr.length) {
+            newArr.push(item);
+        }
     })
-    console.log(newArr);
+    var domTreeArray = [];
+
+    function buildDomTree(arr, resultArray) {
+        for (var i = 0; i < arr.length; i++) {
+            var firstTag = /^<([\w\-]+)/.exec(arr[i]);
+            if (firstTag) {
+                firstTag = firstTag[1];
+            }
+            var lastTag = /^<\/([\w\-]+)/.exec(arr[i]);
+            if (lastTag) {
+                lastTag = lastTag[1];
+                console.log(lastTag);
+            }
+        }
+    }
+    buildDomTree(newArr, domTreeArray)
 };
 //html引擎，生成类DOM结构
 function HtmlEngine(TBDomCollectionArray) {
@@ -72,37 +97,42 @@ toolKit.extend(HtmlEngine.prototype, {
 //html元素构造器
 function HtmlBuilder(tagName, properties, isOddTags) {
     this.tagName = tagName;
-    this.properties = {
-        className: '',
-        style: null
-    };
-    if (!isOddTags) {
-        this.properties.childNodes = [];
-    }
     this.attributes = {};
-    for (var i in properties) {
-        this.properties[i] = properties[i];
+    if (!isOddTags) {
+        this.setAttribute('childNodes', []);
     }
+    this.setAttribute(properties);
 };
 toolKit.extend(HtmlBuilder.prototype, {
-    setAttributes: function(attributes) {
+    setAttribute: function(attributes, value) {
+        if (toolKit.isString(attributes)) {
+            this.attributes[attributes] = value;
+            return this;
+        }
         for (var i in attributes) {
             this.attributes[i] = attributes[i];
         }
+        return this;
     },
     getAttribute: function(key) {
         return this.attributes[key];
     },
     addClass: function(className) {
+        if (this.attributes.className === undefined) {
+            this.attributes.className = '';
+        }
         var reg = new RegExp('(^|\\s+)' + className + '(\\s+|$)');
-        if (!reg.test(' ' + this.properties.className + ' ')) {
-            this.properties.className += ' ' + className;
+        if (!reg.test(' ' + this.attributes.className + ' ')) {
+            this.attributes.className += ' ' + className;
         }
     },
     removeClass: function(className) {
+        if (this.attributes.className === undefined) {
+            this.attributes.className = '';
+        }
         var reg = new RegExp('(^|\\s+)' + className + '(\\s+|$)');
-        if (reg.test(' ' + this.properties.className + ' ')) {
-            this.properties.className = this.properties.className.replace(reg, '').replace(/^\s+|\s+$/g, '').replace(/\s+/g, ' ');
+        if (reg.test(' ' + this.attributes.className + ' ')) {
+            this.attributes.className = this.attributes.className.replace(reg, '').replace(/^\s+|\s+$/g, '').replace(/\s+/g, ' ');
         }
     }
 })
