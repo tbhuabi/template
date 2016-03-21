@@ -565,4 +565,3 @@ Template.addHandlersMethod({
         return '';
     }
 });
-return Template;
