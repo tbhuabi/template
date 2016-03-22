@@ -169,8 +169,6 @@ define(function(require, exports, module) {
         getInnerHtml: function() {
             var innerHTML = '';
             for (var i = 0; i < this.childNodes.length; i++) {
-                var n = this.childNodes[i];
-                var f = n.outerHtml;
                 innerHTML += this.childNodes[i].getOuterHtml();
             }
             return innerHTML;
