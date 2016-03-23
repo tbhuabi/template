@@ -40,6 +40,18 @@ define(function(require, exports, module) {
                 }
             }
             return newObj;
+        },
+        extendPrototype: function(parentObj, fnChildAttr, childMethodes) {
+            function Child() {
+                parentObj.apply(this, arguments);
+                fnChildAttr.apply(this, arguments);
+            }
+            Child.prototype = new parentObj();
+            Child.prototype.constructor = Child;
+            for (var name in childMethodes) {
+                Child.prototype[name] = childMethodes[name];
+            }
+            return Child;
         }
     };
     module.exports = toolKit;
