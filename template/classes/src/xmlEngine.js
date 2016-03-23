@@ -283,6 +283,12 @@ define(function(require, exports, module) {
             return new OddElement(tag);
         },
         createTextNode: function(text) {
+            text = text.replace(/[<>]/g, function(str) {
+                if (str === '<') {
+                    return '&lt;';
+                }
+                return '&gt;';
+            })
             return new TextElement(text);
         },
         $XMLEngine: function() {
@@ -408,8 +414,8 @@ define(function(require, exports, module) {
 
     module.exports = function(text) {
         var document = new DocumentEngine(text);
-        //        console.log(document);
-        //        console.log(document.innerHTML);
+        console.log(document);
+        console.log(document.innerHTML);
         console.log(document.getElementsByClassName('a'));
         console.log(document.getElementsByTagName('td'));
     };
