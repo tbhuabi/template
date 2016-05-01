@@ -89,7 +89,7 @@
 		<h2 style="color: red;">具体模板语法，请参照以下内容</h2>
 		<h2 style="color: #c78d0a;">这个颜色的东东是运算后的结果</h2>
 		<h3>这是一个<span>{{@listGroup.type}}</span></h3>
-		<p>其中用户一个有<span>{{@listGroup.userList->getLength}}</span>位</p>
+		<p>其中用户一个有<span>{{@listGroup.userList|getLength}}</span>位</p>
     	<p>他们分别是</p>
     	<table>
 			<tr>
@@ -98,11 +98,11 @@
 				<td>工作</td>
 				<td>type</td>
 			</tr>
-			<exp for='variable[value] in @listGroup.userList'>
+			<exp for='variable in @listGroup.userList'>
 				<tr>
-					<td><span>{{@variable.value.name}}</span></td>
-					<td><span>{{@variable.value.age}}</span></td>
-					<td><span>{{@variable.value.job}}</span></td>
+					<td><span>{{@variable.name}}</span></td>
+					<td><span>{{@variable.age}}</span></td>
+					<td><span>{{@variable.job}}</span></td>
 					<td><span>{{@listGroup.type}}</span></td>
 				</tr>
 			</exp>
@@ -114,12 +114,12 @@
 				<td>年龄</td>
 				<td>工作</td>
 			</tr>
-			<exp for='obj[person] in @listGroup.userList'>
-				<exp if='@obj.person.age > 30'>
+			<exp for='obj in @listGroup.userList'>
+				<exp if='@obj.age > 30'>
 					<tr>
-						<td><span>{{@obj.person.name}}</span></td>
-						<td><span>{{@obj.person.age}}</span></td>
-						<td><span>{{@obj.person.job}}</span></td>
+						<td><span>{{@obj.name}}</span></td>
+						<td><span>{{@obj.age}}</span></td>
+						<td><span>{{@obj.job}}</span></td>
 					</tr>
 				</exp>
 			</exp>
@@ -132,21 +132,21 @@
 				<td>性别</td>
 				<td>工作</td>
 			</tr>
-			<exp sort='variable[valuekey] < age @listGroup.userList'>
-                <exp for='child[value] in @variable.valuekey'>
+			<exp sort='variable < age @listGroup.userList'>
+                <exp for='child in @variable'>
                     <tr>
-                        <td><span>{{@child.value.name}}</span></td>
-                        <td><span>{{@child.value.age}}</span></td>
-                        <td><span>{{@child.value.sex}}</span></td>
-                        <td><span>{{@child.value.job}}</span></td>
+                        <td><span>{{@child.name}}</span></td>
+                        <td><span>{{@child.age}}</span></td>
+                        <td><span>{{@child.sex}}</span></td>
+                        <td><span>{{@child.job}}</span></td>
                     </tr>
                 </exp>
 			</exp>
     	</table>
         <p>当然也可以对数据进行排序</p>
-        <exp sort='newArray[array] > @listGroup.arr'>
-            <exp for='newArr[value,index] in @newArray.array'>
-                <div>序号：<span>{{@newArr.index}}</span>值：<span>{{@newArr.value}}</span></div>
+        <exp sort='newArray > @listGroup.arr'>
+            <exp for='value index in <@newArray></@newArray>'>
+                <div>序号：<span>{{@index}}</span>值：<span>{{@value}}</span></div>
             </exp>
         </exp>
     	<p>当然，还可以给表格加上序号</p>
@@ -157,12 +157,12 @@
 				<td>年龄</td>
 				<td>工作</td>
 			</tr>
-			<exp for='variable[value,index] in @listGroup.userList'>
+			<exp for='value index in @listGroup.userList'>
 				<tr>
-					<td><span>{{@variable.index}}</span></td>
-					<td><span>{{@variable.value.name}}</span></td>
-					<td><span>{{@variable.value.age}}</span></td>
-					<td><span>{{@variable.value.job}}</span></td>
+					<td><span>{{@index}}</span></td>
+					<td><span>{{@value.name}}</span></td>
+					<td><span>{{@value.age}}</span></td>
+					<td><span>{{@value.job}}</span></td>
 				</tr>
 			</exp>
     	</table>
@@ -174,12 +174,12 @@
 				<td>年龄</td>
 				<td>工作</td>
 			</tr>
-			<exp for="variable[value,index] in @listGroup.userList">
+			<exp for="value index in @listGroup.userList">
 				<tr>
-					<td><span>{{@variable.index + 1}}</span></td>
-					<td><span>{{@variable.value.name}}</span></td>
-					<td><span>{{@variable.value.age}}</span></td>
-					<td><span>{{@variable.value.job}}</span></td>
+					<td><span>{{@index + 1}}</span></td>
+					<td><span>{{@value.name}}</span></td>
+					<td><span>{{@value.age}}</span></td>
+					<td><span>{{@value.job}}</span></td>
 				</tr>
 			</exp>
     	</table>
@@ -190,12 +190,12 @@
 				<td>年龄</td>
 				<td>工作</td>
 			</tr>
-			<exp for="variable[value] in @listGroup.userList">
-				<exp if="!@variable.value.sex">
+			<exp for="variable in @listGroup.userList">
+				<exp if="!@variable.sex">
 					<tr>
-						<td><span>{{@variable.value.name}}</span></td>
-						<td><span>{{@variable.value.age}}</span></td>
-						<td><span>{{@variable.value.job}}</span></td>
+						<td><span>{{@variable.name}}</span></td>
+						<td><span>{{@variable.age}}</span></td>
+						<td><span>{{@variable.job}}</span></td>
 					</tr>
 				</exp>
 			</exp>
@@ -209,14 +209,14 @@
 				<td>亲戚</td>
 				<td>注册时间</td>
 			</tr>
-			<exp for="variable[value] in @listGroup.userList">
+			<exp for="variable in @listGroup.userList">
 				<tr>
-					<td><span>{{@variable.value.name}}</span></td>
-					<td><span>{{@variable.value.age}}</span></td>
-					<td><span>{{@variable.value.job}}</span></td>
+					<td><span>{{@variable.name}}</span></td>
+					<td><span>{{@variable.age}}</span></td>
+					<td><span>{{@variable.job}}</span></td>
 					<td>
-						<exp for="child[value,index] in @variable.value.relatives">
-							<div>关系：<span>{{@child.index}}</span>名字是什么呢：<span>{{@child.value}}</span></div>
+						<exp for="value index in @variable.relatives">
+							<div>关系：<span>{{@index}}</span>名字是什么呢：<span>{{@value}}</span></div>
 						</exp>
 					</td>
 				</tr>
@@ -231,14 +231,14 @@
 				<td>工作</td>
 				<td>亲戚</td>
 			</tr>
-			<exp for="variable[value] in @listGroup.userList">
-				<exp if="@variable.value.sex === 女">
+			<exp for="variable in @listGroup.userList">
+				<exp if="@variable.sex === 女">
 					<tr>
-						<td><span>{{@variable.value.name}}</span></td>
-						<td><span>{{@variable.value.age}}</span></td>
-						<td><span>{{@variable.value.sex}}</span></td>
-						<td><span>{{@variable.value.job}}</span></td>
-						<td><span>{{@variable.value.registerTime->dateFormat}}</span></td>
+						<td><span>{{@variable.name}}</span></td>
+						<td><span>{{@variable.age}}</span></td>
+						<td><span>{{@variable.sex}}</span></td>
+						<td><span>{{@variable.job}}</span></td>
+						<td><span>{{@variable.registerTime|dateFormat}}</span></td>
 					</tr>
 				</exp>
 			</exp>
@@ -252,14 +252,14 @@
 				<td>工作</td>
 				<td>亲戚</td>
 			</tr>
-			<exp for="variable[value] in @listGroup.userList">
-				<exp if="@variable.value.sex === 女">
+			<exp for="variable in @listGroup.userList">
+				<exp if="@variable.sex === 女">
 					<tr>
-						<td><span>{{@variable.value.name}}</span></td>
-						<td><span>{{@variable.value.age}}</span></td>
-						<td><span>{{@variable.value.sex}}</span></td>
-						<td><span>{{@variable.value.job}}</span></td>
-						<td><span>{{@variable.value.registerTime->dateFormat:[yyyy-MM]}}</span></td>
+						<td><span>{{@variable.name}}</span></td>
+						<td><span>{{@variable.age}}</span></td>
+						<td><span>{{@variable.sex}}</span></td>
+						<td><span>{{@variable.job}}</span></td>
+						<td><span>{{@variable.registerTime|dateFormat:yyyy-MM}}</span></td>
 					</tr>
 				</exp>
 			</exp>
