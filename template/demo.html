@@ -145,7 +145,7 @@
     	</table>
         <p>当然也可以对数据进行排序</p>
         <exp sort='newArray > @listGroup.arr'>
-            <exp for='value index in <@newArray></@newArray>'>
+            <exp for='value index in @newArray'>
                 <div>序号：<span>{{@index}}</span>值：<span>{{@value}}</span></div>
             </exp>
         </exp>
