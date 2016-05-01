@@ -42,36 +42,6 @@
 					listGroup: data		//listGroup为自定义命名空间，data为数据json
 				},
                 handlers: {},
-				//表达式中依赖方法的集合，也可在调用init前调用addHandlersMethod方法来
-				//		增加方法，也可直接在new之前调用Template的静态方法addHandlersMethod函数
-				//		来增加方法，所有方法默认第一个参数都为表达式的value值，支持链式调用如：
-				//		@data.name->dataFormat:[yyyy-MM-dd,@data.age]->wrap:[<i>@content</>]
-				//
-				//支持的表达式示例：
-				//@data
-				//@data.name
-				//@data.time->dateFormat
-				//@data.time->dateFormat:[yyyy-MM-dd]
-				//@data.time->dateFormat:[@date.registerTime,yyyy-MM-dd]
-				//@data.time->dateFormat:[@date.registerTime,yyyy-MM-dd]->toString
-				//(3 + 5) * 3
-				//(3 + 5) * @data.number
-				//1 + (@data.number + 5)->format * @data.number
-				//
-				//支持for循环
-				//		<exp for="表达式"></exp>
-				//支持if判断
-				//		<exp if="表达式"></exp>
-				//支持log，方便调试
-				//		<exp log="表达式"></exp>
-				//
-				//总结如下：
-				//	运算符用空格隔开，支持四则运算，取模，和逻辑运算
-				//	函数参数也可用@取值，但不支持运算，参数之间用逗号隔开
-				//	鉴于昨天晚上我上传上来，兄弟们要求提供源码，所以这次提供的为未压缩版本
-				//	如还有不明白的地方，可联系QQ：464328895 畫筆
-				//	很期待兄弟们能提一些意见或建议
-				//
                 dataEmptyHandler: false,//是否把undefined, null 处理为空字符串
                 callback: function(result) {
                     //console.log(result);
